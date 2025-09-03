@@ -14,14 +14,34 @@ def initdb():
 
 @app.route("/", methods=['GET'])
 def home():
-	return render_template("index.html")
+	query = db.get_db()
+	rows = query.execute("SELECT * FROM categorias").fetchall()
+	categorias = [dict(row) for row in rows ]
+	return render_template("index.html", categorias=categorias)
+
+# def generateItineraries():
+
 
 @app.route("/roteiro", methods=['POST'])
-def generateItineraries():
-	dias = request.form.get("dias")
-	orcamento = request.form.get("orcamento")
+def getItineraries():
+	dias = int(request.form.get("dias"))
+	dias_em_horas = dias * 24
+	orcamento = float(request.form.get("orcamento"))
 	preferencias = request.form.getlist("preferencias")
-	return render_template("roteiro.html")
+	preferencias_ids = [int(pref) for pref in preferencias ]
+	
+	query = db.get_db()
+	placeholders = ",".join("?" * len(preferencias))
+	sql = f"SELECT * FROM atividades WHERE id_categoria IN ({placeholders})"
+	rows = query.execute(sql, preferencias_ids).fetchall()
+	actividades = [dict(row) for row in rows ]
+
+	return render_template("roteiro.html",
+		actividades=actividades,
+		dias=dias,
+		orcamento=orcamento,
+		preferencias=preferencias,
+		dias_em_horas=dias_em_horas)
 
 if __name__ == "__main__":
 	app.run(debug=True)

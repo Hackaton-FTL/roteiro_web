@@ -45,18 +45,12 @@
                 <!-- Campo para Preferências de Atividades -->
                 <div class="mb-4">
                     <label class="form-label">Preferências de atividades</label>
+					{% for atividade in categorias %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cultura" name="preferencias" value="Cultura">
-                        <label class="form-check-label" for="cultura">Cultura</label>
+                        <input class="form-check-input" type="checkbox" id="{{ atividade['id_categoria'] }}" name="preferencias" value="{{ atividade['id_categoria'] }}">
+                        <label class="form-check-label" for="{{ atividade['id_categoria'] }}">{{ atividade['nome'].capitalize() }}</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="natureza" name="preferencias" value="Natureza">
-                        <label class="form-check-label" for="natureza">Natureza</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gastronomia" name="preferencias" value="Gastronomia">
-                        <label class="form-check-label" for="gastronomia">Gastronomia</label>
-                    </div>
+					{% endfor %}
                 </div>
 
                 <div class="d-grid gap-2">

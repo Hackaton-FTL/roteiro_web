@@ -38,8 +38,9 @@
         <h1 class="text-center mb-4">Seu Roteiro de Viagem</h1>
         <p class="text-center mb-5 text-muted">Aqui está o roteiro personalizado com base nas suas preferências.</p>
 
+		{% for dia in range(dias) %}
         <div class="day-card">
-            <h3 class="mb-3">Dia 1</h3>
+            <h3 class="mb-3">Dia {{ dia + 1 }}</h3>
             <ul class="list-unstyled">
                 <li class="activity-item">Visita ao Museu Nacional</li>
                 <li class="activity-item">Almoço em um restaurante típico</li>
@@ -47,24 +48,7 @@
                 <li class="activity-item">Sessão de fotos no parque principal</li>
             </ul>
         </div>
-
-        <div class="day-card">
-            <h3 class="mb-3">Dia 2</h3>
-            <ul class="list-unstyled">
-                <li class="activity-item">Trilha em uma reserva natural</li>
-                <li class="activity-item">Piquenique à beira da cachoeira</li>
-                <li class="activity-item">Observação da fauna e flora local</li>
-            </ul>
-        </div>
-
-        <div class="day-card">
-            <h3 class="mb-3">Dia 3</h3>
-            <ul class="list-unstyled">
-                <li class="activity-item">Tour de degustação em vinícola</li>
-                <li class="activity-item">Visita a um mercado de alimentos artesanais</li>
-                <li class="activity-item">Aula de culinária com um chef local</li>
-            </ul>
-        </div>
+		{% endfor %}
 
         <div class="d-grid gap-2 mt-5">
             <a href="/" class="btn btn-secondary rounded-lg">Voltar ao Formulário</a>
