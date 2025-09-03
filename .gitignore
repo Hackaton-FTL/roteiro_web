@@ -1,2 +1,5 @@
 .qodo
 .venv
+__pycache__/
+instance/
+db.sqlite
