@@ -11,7 +11,7 @@ def generateItineraries():
 	dias = request.form.get("dias")
 	orcamento = request.form.get("orcamento")
 	preferencias = request.form.getlist("preferencias")
-	return f"{dias} {orcamento} {preferencias}"
+	return render_template("roteiro.html")
 
 if __name__ == "__main__":
 	app.run(debug=True)
