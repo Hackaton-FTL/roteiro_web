@@ -38,16 +38,17 @@
         <h1 class="text-center mb-4">Seu Roteiro de Viagem</h1>
         <p class="text-center mb-5 text-muted">Aqui está o roteiro personalizado com base nas suas preferências.</p>
 
-		{% for dia in range(dias) %}
+		{% for atividade in roteiro %}
+		{% if atividade['atividade'] %}
         <div class="day-card">
-            <h3 class="mb-3">Dia {{ dia + 1 }}</h3>
+            <h3 class="mb-3">Dia {{ atividade['dia'] }}</h3>
             <ul class="list-unstyled">
-                <li class="activity-item">Visita ao Museu Nacional</li>
-                <li class="activity-item">Almoço em um restaurante típico</li>
-                <li class="activity-item">Passeio pelo centro histórico da cidade</li>
-                <li class="activity-item">Sessão de fotos no parque principal</li>
+				{% for item in atividade['atividade'] %}
+                <li class="activity-item">Atividade: {{ item['nome_atividade'] }} - Custo: {{ item['custo'] }} - Duração: {{ item['duracao'] }} horas - Descrição: {{ item['descricao'] }}</li>
+				{% endfor %}
             </ul>
         </div>
+		{% endif %}
 		{% endfor %}
 
         <div class="d-grid gap-2 mt-5">
