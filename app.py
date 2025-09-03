@@ -2,11 +2,11 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def home():
 	return render_template("index.html")
 
-@app.route("/roteiro", methods=["POST"])
+@app.route("/roteiro", methods=['POST'])
 def generateItineraries():
 	dias = request.form.get("dias")
 	orcamento = request.form.get("orcamento")
