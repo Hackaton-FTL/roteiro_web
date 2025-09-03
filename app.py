@@ -31,9 +31,13 @@ def getItineraries():
 	preferencias_ids = [int(pref) for pref in preferencias ]
 	
 	query = db.get_db()
-	placeholders = ",".join("?" * len(preferencias))
-	sql = f"SELECT * FROM atividades WHERE id_categoria IN ({placeholders})"
-	rows = query.execute(sql, preferencias_ids).fetchall()
+	if preferencias_ids:
+		placeholders = ",".join("?" * len(preferencias))
+		sql = f"SELECT * FROM atividades WHERE id_categoria IN ({placeholders})"
+		rows = query.execute(sql, preferencias_ids).fetchall()
+	else:
+		rows = query.execute("SELECT * FROM atividades").fetchall()
+
 	actividades = [dict(row) for row in rows ]
 
 	return render_template("roteiro.html",
