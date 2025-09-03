@@ -48,6 +48,7 @@ def generateItineraries(orcamento, actividades, dias):
 	return roteiro
 
 
+
 @app.route("/roteiro", methods=['POST'])
 def getItineraries():
 	dias = int(request.form.get("dias"))
