@@ -1,22 +1,20 @@
 from flask import Flask, render_template, request
-import db, random
+import random
+import os
+from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
+
+# Carrega variáveis de ambiente do arquivo .env
+load_dotenv()
 
 app = Flask(__name__)
 
 # Configuração do cliente da API da Hugging Face
-client = InferenceClient(api_key="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")
+api_key = os.getenv('HUGGINGFACE_API_KEY')
+if not api_key:
+    raise ValueError("HUGGINGFACE_API_KEY environment variable is required")
 
-@app.teardown_appcontext
-def teardown_db(exception):
-	db.close_db(exception)
-
-
-@app.route("/createdb", methods=['GET'])
-def initdb():
-	db.init_db()
-	return "Banco de dados criado"
-
+client = InferenceClient(api_key=api_key)
 
 @app.route("/", methods=['GET'])
 def home():
