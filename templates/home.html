@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteirizador Inteligente de Ecoturismo - Luanda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #0891b2 100%);
+        }
+        .eco-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #10b981;
+        }
+        .eco-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                        🌿
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">EcoRoteiro IA</h1>
+                        <p class="text-sm opacity-80">Turismo Inteligente Angola</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="hover:text-green-300 transition-colors font-medium">Início</a>
+                    <a href="/generator" class="hover:text-green-300 transition-colors font-medium">Gerar Roteiro</a>
+                    <a href="/about" class="hover:text-green-300 transition-colors font-medium">Sobre o Projeto</a>
+                </div>
+                <button class="md:hidden" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="/" class="block w-full text-left py-2 hover:text-green-300">Início</a>
+                <a href="/generator" class="block w-full text-left py-2 hover:text-green-300">Gerar Roteiro</a>
+                <a href="/about" class="block w-full text-left py-2 hover:text-green-300">Sobre o Projeto</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6">🤖 Roteirizador Inteligente de Ecoturismo</h2>
+            <p class="text-xl md:text-2xl mb-4 opacity-90 font-medium">Descubra Angola de forma inteligente e sustentável</p>
+            <p class="text-lg mb-8 opacity-80 max-w-3xl mx-auto">
+                Transformamos sua viagem em uma experiência única, otimizando tempo e orçamento enquanto promovemos o turismo responsável em Angola. Powered by Inteligência Artificial.
+            </p>
+            <a href="/generator" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                🚀 Gerar Meu Roteiro com IA
+            </a>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">Funcionalidades Inteligentes</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="eco-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h4 class="text-xl font-semibold mb-3 text-gray-800">Inteligência Artificial</h4>
+                    <p class="text-gray-600">Roteiros personalizados gerados por IA avançada, considerando suas preferências, orçamento e tempo disponível.</p>
+                </div>
+                <div class="eco-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-4xl mb-4">🌍</div>
+                    <h4 class="text-xl font-semibold mb-3 text-gray-800">Turismo Sustentável</h4>
+                    <p class="text-gray-600">Promovemos experiências que respeitam o meio ambiente e contribuem para o desenvolvimento local sustentável.</p>
+                </div>
+                <div class="eco-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h4 class="text-xl font-semibold mb-3 text-gray-800">Otimização Inteligente</h4>
+                    <p class="text-gray-600">Algoritmos avançados otimizam tempo, custos e experiências para maximizar sua satisfação na viagem.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-3xl font-bold mb-6 text-gray-800">Pronto para sua aventura inteligente?</h3>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Nossa IA está pronta para criar o roteiro perfeito para você, considerando suas preferências pessoais e promovendo o turismo sustentável em Angola.
+            </p>
+            <a href="/generator" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                Começar Agora
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Logo & Description -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                            🌿
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold">EcoRoteiro IA</h4>
+                            <p class="text-sm opacity-80">Turismo Inteligente Angola</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Revolucionando o turismo em Angola através de tecnologia de ponta e sustentabilidade ambiental.
+                    </p>
+                </div>
+                
+                <!-- Features -->
+                <div>
+                    <h4 class="font-semibold mb-4">Tecnologia</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>• Inteligência Artificial</p>
+                        <p>• Otimização de Rotas</p>
+                        <p>• Sustentabilidade</p>
+                        <p>• Experiência Personalizada</p>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold mb-4">Projeto</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>Hackathon FTL</p>
+                        <p>Angola 2025</p>
+                        <p>Turismo Inteligente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 mt-8 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm">© 2025 EcoRoteiro IA. Desenvolvido para o Hackathon FTL.</p>
+                    <p class="text-gray-400 text-sm mt-2 md:mt-0">Promovendo turismo sustentável em Angola 🇦🇴</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

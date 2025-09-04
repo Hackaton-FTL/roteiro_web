@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Projeto - EcoRoteiro IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #0891b2 100%);
+        }
+        .ods-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                        🌿
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">EcoRoteiro IA</h1>
+                        <p class="text-sm opacity-80">Turismo Inteligente Angola</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="hover:text-green-300 transition-colors font-medium">Início</a>
+                    <a href="/generator" class="hover:text-green-300 transition-colors font-medium">Gerar Roteiro</a>
+                    <a href="/about" class="hover:text-green-300 transition-colors font-medium text-green-300">Sobre o Projeto</a>
+                </div>
+                <button class="md:hidden" onclick="toggleMobileMenu()" title="Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="/" class="block w-full text-left py-2 hover:text-green-300">Início</a>
+                <a href="/generator" class="block w-full text-left py-2 hover:text-green-300">Gerar Roteiro</a>
+                <a href="/about" class="block w-full text-left py-2 hover:text-green-300 text-green-300">Sobre o Projeto</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Sobre o EcoRoteiro IA</h2>
+            
+            <!-- Project Context -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-semibold mb-6 text-green-600">🚀 Contexto do Projeto</h3>
+                <div class="prose max-w-none text-gray-700 leading-relaxed space-y-4">
+                    <p class="text-lg">
+                        O <strong>EcoRoteiro IA</strong> é uma plataforma inovadora desenvolvida para o <strong>Hackathon FTL 2025</strong> 
+                        que revoluciona a forma como os turistas exploram Angola, combinando inteligência artificial avançada 
+                        com princípios de sustentabilidade ambiental.
+                    </p>
+                    
+                    <p>
+                        Nossa missão é promover o <strong>turismo responsável</strong> em Angola, oferecendo experiências 
+                        personalizadas que respeitam o meio ambiente, valorizam a cultura local e contribuem para o 
+                        desenvolvimento sustentável das comunidades.
+                    </p>
+
+                    <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">🎯 Objetivos Principais</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Democratizar o acesso ao turismo inteligente através de tecnologia de IA</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Otimizar tempo, custos e experiências para maximizar a satisfação do turista</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Promover práticas de turismo sustentável e ambientalmente responsável</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Valorizar e preservar o patrimônio cultural e natural de Angola</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Contribuir para o desenvolvimento econômico local sustentável</span>
+                        </li>
+                    </ul>
+
+                    <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">🤖 Tecnologia e Inovação</h4>
+                    <p>
+                        Utilizamos o modelo de linguagem <strong>Llama-3.3-70B-Instruct</strong> via Hugging Face 
+                        para gerar roteiros personalizados que consideram:
+                    </p>
+                    <ul class="space-y-1 ml-4">
+                        <li>• Preferências pessoais e interesses específicos</li>
+                        <li>• Orçamento disponível e otimização de custos</li>
+                        <li>• Tempo disponível e ritmo de viagem desejado</li>
+                        <li>• Tamanho e composição do grupo de viagem</li>
+                        <li>• Princípios de sustentabilidade e responsabilidade ambiental</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ODS Section -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-semibold mb-6 text-blue-600">🌍 Relação com os Objetivos de Desenvolvimento Sustentável (ODS)</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="ods-card p-6 rounded-lg">
+                        <div class="text-4xl mb-3">🌱</div>
+                        <h4 class="font-semibold text-lg mb-2">ODS 8: Trabalho Decente e Crescimento Econômico</h4>
+                        <p class="text-sm text-gray-600">Promovemos o turismo sustentável que gera empregos locais e contribui para o crescimento econômico das comunidades angolanas.</p>
+                    </div>
+                    <div class="ods-card p-6 rounded-lg">
+                        <div class="text-4xl mb-3">🏛️</div>
+                        <h4 class="font-semibold text-lg mb-2">ODS 11: Cidades e Comunidades Sustentáveis</h4>
+                        <p class="text-sm text-gray-600">Desenvolvemos soluções tecnológicas que tornam as cidades mais inclusivas, seguras e sustentáveis para o turismo.</p>
+                    </div>
+                    <div class="ods-card p-6 rounded-lg">
+                        <div class="text-4xl mb-3">🌿</div>
+                        <h4 class="font-semibold text-lg mb-2">ODS 15: Vida Terrestre</h4>
+                        <p class="text-sm text-gray-600">Priorizamos experiências que protegem e conservam a biodiversidade e os ecossistemas terrestres de Angola.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Impact Section -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-semibold mb-6 text-purple-600">📊 Impacto Esperado</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-3 text-gray-800">🎯 Para os Turistas</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• Experiências mais personalizadas e significativas</li>
+                            <li>• Otimização de tempo e recursos financeiros</li>
+                            <li>• Descoberta de destinos e atividades autênticas</li>
+                            <li>• Contribuição para práticas sustentáveis</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-3 text-gray-800">🏘️ Para as Comunidades Locais</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• Aumento do fluxo turístico responsável</li>
+                            <li>• Geração de renda e oportunidades de emprego</li>
+                            <li>• Valorização da cultura e tradições locais</li>
+                            <li>• Preservação do patrimônio natural</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-2xl font-semibold mb-6 text-purple-600">👥 Equipe do Projeto</h3>
+                <div class="text-center">
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <div class="text-4xl mb-3">🚀</div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Hackathon FTL 2025</h4>
+                        <p class="text-gray-600 mb-4">
+                            Projeto desenvolvido durante o Hackathon FTL (Future Tech Leaders) 2025, 
+                            focado em soluções inovadoras para o turismo sustentável em Angola.
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Inteligência Artificial</span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Turismo Sustentável</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">Desenvolvimento Web</span>
+                            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">UX/UI Design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Logo & Description -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                            🌿
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold">EcoRoteiro IA</h4>
+                            <p class="text-sm opacity-80">Turismo Inteligente Angola</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Revolucionando o turismo em Angola através de tecnologia de ponta e sustentabilidade ambiental.
+                    </p>
+                </div>
+                
+                <!-- Features -->
+                <div>
+                    <h4 class="font-semibold mb-4">Tecnologia</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>• Inteligência Artificial</p>
+                        <p>• Otimização de Rotas</p>
+                        <p>• Sustentabilidade</p>
+                        <p>• Experiência Personalizada</p>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold mb-4">Projeto</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>Hackathon FTL</p>
+                        <p>Angola 2025</p>
+                        <p>Turismo Inteligente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 mt-8 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm">© 2025 EcoRoteiro IA. Desenvolvido para o Hackathon FTL.</p>
+                    <p class="text-gray-400 text-sm mt-2 md:mt-0">Promovendo turismo sustentável em Angola 🇦🇴</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

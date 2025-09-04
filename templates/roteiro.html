@@ -1,64 +1,215 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seu Roteiro Personalizado</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Seu Roteiro Inteligente - EcoRoteiro IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-color: #9199a1;
-            font-family: 'Inter', sans-serif;
-            padding-top: 50px;
-        }
-        .itinerary-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .day-card {
-            background-color: #e9ecef;
-            border-left: 5px solid #0d6efd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .activity-item {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            padding: 10px 0;
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #0891b2 100%);
         }
         .ai-content {
-            line-height: 1.6;
+            line-height: 1.8;
             white-space: pre-line;
             font-size: 1.05rem;
+            color: #374151;
         }
-        .description {
-            color: #6c757d;
-            font-style: italic;
+        .result-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 2px solid #10b981;
+            transition: all 0.3s ease;
         }
-        .activities-list {
-            margin-top: 15px;
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
         }
     </style>
 </head>
-<body>
-
-    <div class="container itinerary-container">
-        <h1 class="text-center mb-4">🤖 Seu Roteiro Inteligente</h1>
-        <p class="text-center mb-5 text-muted">
-            Aqui está o roteiro personalizado gerado por Inteligência Artificial com base nas suas preferências.
-        </p>
-
-        <!-- Roteiro gerado por IA -->
-        <div class="day-card">
-            <div class="ai-content">
-                {{ roteiro_ia | replace('\n', '<br>') | safe }}
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                        🌿
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">EcoRoteiro IA</h1>
+                        <p class="text-sm opacity-80">Turismo Inteligente Angola</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="hover:text-green-300 transition-colors font-medium">Início</a>
+                    <a href="/generator" class="hover:text-green-300 transition-colors font-medium">Gerar Roteiro</a>
+                    <a href="/about" class="hover:text-green-300 transition-colors font-medium">Sobre o Projeto</a>
+                </div>
+                <button class="md:hidden" onclick="toggleMobileMenu()" title="Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="/" class="block w-full text-left py-2 hover:text-green-300">Início</a>
+                <a href="/generator" class="block w-full text-left py-2 hover:text-green-300">Gerar Roteiro</a>
+                <a href="/about" class="block w-full text-left py-2 hover:text-green-300">Sobre o Projeto</a>
             </div>
         </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">🤖 Seu Roteiro Inteligente</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Aqui está o roteiro personalizado gerado por nossa Inteligência Artificial, 
+                    otimizado especialmente para suas preferências e necessidades.
+                </p>
+            </div>
+
+            <!-- Success Badge -->
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-8 text-center">
+                <div class="flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-semibold">Roteiro gerado com sucesso!</span>
+                </div>
+            </div>
+
+            <!-- Roteiro gerado por IA -->
+            <div class="result-card p-8 rounded-lg shadow-lg">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-white text-xl">🎯</span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">Roteiro Personalizado</h3>
+                        <p class="text-gray-600">Criado com Inteligência Artificial</p>
+                    </div>
+                </div>
+                
+                <div class="ai-content bg-white p-6 rounded-lg border border-gray-200">
+                    {{ roteiro_ia | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/generator" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold text-center transition-all transform hover:scale-105">
+                    🔄 Gerar Novo Roteiro
+                </a>
+                <button onclick="window.print()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105">
+                    🖨️ Imprimir Roteiro
+                </button>
+                <button onclick="shareRoteiro()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105">
+                    📤 Compartilhar
+                </button>
+            </div>
+
+            <!-- Tips -->
+            <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h4 class="text-lg font-semibold text-blue-800 mb-3">💡 Dicas para sua viagem:</h4>
+                <ul class="text-blue-700 space-y-2">
+                    <li class="flex items-start">
+                        <span class="text-blue-500 mr-2">•</span>
+                        <span>Verifique sempre as condições climáticas antes de sair</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-500 mr-2">•</span>
+                        <span>Leve sempre documentos de identificação</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-500 mr-2">•</span>
+                        <span>Mantenha contato com familiares sobre sua localização</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-500 mr-2">•</span>
+                        <span>Respeite a cultura local e o meio ambiente</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Logo & Description -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                            🌿
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold">EcoRoteiro IA</h4>
+                            <p class="text-sm opacity-80">Turismo Inteligente Angola</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Revolucionando o turismo em Angola através de tecnologia de ponta e sustentabilidade ambiental.
+                    </p>
+                </div>
+                
+                <!-- Features -->
+                <div>
+                    <h4 class="font-semibold mb-4">Tecnologia</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>• Inteligência Artificial</p>
+                        <p>• Otimização de Rotas</p>
+                        <p>• Sustentabilidade</p>
+                        <p>• Experiência Personalizada</p>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold mb-4">Projeto</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>Hackathon FTL</p>
+                        <p>Angola 2025</p>
+                        <p>Turismo Inteligente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 mt-8 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm">© 2025 EcoRoteiro IA. Desenvolvido para o Hackathon FTL.</p>
+                    <p class="text-gray-400 text-sm mt-2 md:mt-0">Promovendo turismo sustentável em Angola 🇦🇴</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function shareRoteiro() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Meu Roteiro Inteligente - EcoRoteiro IA',
+                    text: 'Confira o roteiro personalizado que a IA criou para mim!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para browsers que não suportam Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                });
+            }
+        }
+    </script>
 
         <div class="d-grid gap-2 mt-5">
             <a href="/" class="btn btn-secondary rounded-lg">Voltar ao Formulário</a>

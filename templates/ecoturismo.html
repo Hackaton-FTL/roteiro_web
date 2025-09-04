@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteirizador Inteligente de Ecoturismo - Luanda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #0891b2 100%);
+        }
+        .nature-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .eco-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #10b981;
+        }
+        .eco-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+        }
+        .map-container {
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .day-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 2px solid #10b981;
+        }
+        .poi-item {
+            background: white;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.2s ease;
+        }
+        .poi-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .category-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 12px;
+        }
+        .ods-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                        <span class="text-green-800 font-bold">🌿</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">EcoRoteiros Luanda</h1>
+                        <p class="text-xs opacity-80">Turismo Inteligente & Sustentável</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <button onclick="showPage('home')" class="hover:text-green-300 transition-colors font-medium">Início</button>
+                    <button onclick="showPage('generator')" class="hover:text-green-300 transition-colors font-medium">Gerar Roteiro</button>
+                    <button onclick="showPage('about')" class="hover:text-green-300 transition-colors font-medium">Sobre o Projeto</button>
+                </div>
+                <button class="md:hidden" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <button onclick="showPage('home')" class="block w-full text-left py-2 hover:text-green-300">Início</button>
+                <button onclick="showPage('generator')" class="block w-full text-left py-2 hover:text-green-300">Gerar Roteiro</button>
+                <button onclick="showPage('about')" class="block w-full text-left py-2 hover:text-green-300">Sobre o Projeto</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="homePage" class="page">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl md:text-6xl font-bold mb-6">Roteirizador Inteligente de Ecoturismo</h2>
+                <p class="text-xl md:text-2xl mb-4 opacity-90 font-medium">Descubra Luanda de forma inteligente e sustentável</p>
+                <p class="text-lg mb-8 opacity-80 max-w-3xl mx-auto">
+                    Transformamos sua viagem em uma experiência única, otimizando tempo e orçamento enquanto promovemos o turismo responsável em Angola.
+                </p>
+                <button onclick="showPage('generator')" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                    🗺️ Gerar Meu Roteiro
+                </button>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">Funcionalidades Inteligentes</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="eco-card bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-green-500 text-4xl mb-4">🌱</div>
+                        <h4 class="text-xl font-semibold mb-3">Sustentável</h4>
+                        <p class="text-gray-600">Roteiros que priorizam locais eco-friendly e práticas sustentáveis de turismo.</p>
+                    </div>
+                    <div class="eco-card bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-blue-500 text-4xl mb-4">⚡</div>
+                        <h4 class="text-xl font-semibold mb-3">Otimizado</h4>
+                        <p class="text-gray-600">Algoritmos inteligentes que maximizam sua experiência minimizando tempo e custos.</p>
+                    </div>
+                    <div class="eco-card bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-purple-500 text-4xl mb-4">🗺️</div>
+                        <h4 class="text-xl font-semibold mb-3">Interativo</h4>
+                        <p class="text-gray-600">Visualização dos roteiros em mapa com agrupamento por dias e exportação em JSON/PDF.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Generator Page -->
+    <div id="generatorPage" class="page hidden">
+        <div class="container mx-auto px-4 py-8">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Gerador de Roteiros Inteligente</h2>
+            
+            <!-- Form -->
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-8">
+                <form id="routeForm" class="space-y-6">
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Número de Dias da Viagem</label>
+                            <input type="number" id="tripDays" min="1" max="7" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ex: 3" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Horas Disponíveis por Dia</label>
+                            <input type="number" id="dailyHours" min="4" max="12" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ex: 8" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Número de Pessoas</label>
+                            <input type="number" id="groupSize" min="1" max="20" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ex: 4" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Orçamento Total(Kwanza)</label>
+                            <input type="number" id="totalBudget" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ex: 600000" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-4">Preferências de Viagem</label>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" value="cultura" class="preference-checkbox mr-3 text-green-500">
+                                <div class="flex items-center">
+                                    <span class="category-icon bg-purple-100 text-purple-600 mr-2">🏛️</span>
+                                    <span class="text-sm font-medium">Cultura</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" value="natureza" class="preference-checkbox mr-3 text-green-500">
+                                <div class="flex items-center">
+                                    <span class="category-icon bg-green-100 text-green-600 mr-2">🌿</span>
+                                    <span class="text-sm font-medium">Natureza</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" value="gastronomia" class="preference-checkbox mr-3 text-green-500">
+                                <div class="flex items-center">
+                                    <span class="category-icon bg-orange-100 text-orange-600 mr-2">🍽️</span>
+                                    <span class="text-sm font-medium">Gastronomia</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" value="familia" class="preference-checkbox mr-3 text-green-500">
+                                <div class="flex items-center">
+                                    <span class="category-icon bg-blue-100 text-blue-600 mr-2">👨‍👩‍👧‍👦</span>
+                                    <span class="text-sm font-medium">Família</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" value="sustentabilidade" class="preference-checkbox mr-3 text-green-500">
+                                <div class="flex items-center">
+                                    <span class="category-icon bg-green-100 text-green-600 mr-2">♻️</span>
+                                    <span class="text-sm font-medium">Sustentável</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full nature-bg text-white py-4 rounded-lg font-semibold text-lg transition-all hover:shadow-lg transform hover:scale-105">
+                        🚀 Gerar Roteiro Inteligente
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results -->
+            <div id="routeResults" class="hidden">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Summary -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold text-gray-800">Resumo do Roteiro</h3>
+                            <div class="space-x-2">
+                                <button onclick="exportJSON()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                    📄 Exportar JSON
+                                </button>
+                                <button onclick="exportPDF()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                    📑 Exportar PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div id="totalSummary" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 gap-8">
+                        <!-- Daily Itinerary -->
+                        <div class="lg:col-span-2">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6">Roteiro por Dias</h3>
+                            <div id="dailyItinerary" class="space-y-6"></div>
+                        </div>
+                        
+                        <!-- Interactive Map -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-white rounded-lg shadow-lg p-6 sticky top-24">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Mapa Interativo</h3>
+                                <div id="map" class="map-container"></div>
+                                <div class="mt-4 text-sm text-gray-600">
+                                    <p>🔵 Clique nos marcadores para ver detalhes</p>
+                                    <p>📍 Cores diferentes representam dias diferentes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="page hidden">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Sobre o Projeto</h2>
+                
+                <!-- Project Context -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-green-600">Contexto do Projeto</h3>
+                    <div class="prose max-w-none text-gray-700 leading-relaxed">
+                        <p class="mb-4">
+                            O <strong>Roteirizador Inteligente de Ecoturismo em Luanda</strong> nasceu da necessidade de promover um turismo mais consciente e organizado na capital angolana. Com o crescimento do setor turístico em Angola, identificamos a oportunidade de criar uma ferramenta que não apenas facilite o planejamento de viagens, mas também promova práticas sustentáveis.
+                        </p>
+                        <p class="mb-4">
+                            Nossa plataforma utiliza algoritmos inteligentes para otimizar roteiros, considerando fatores como tempo disponível, orçamento, preferências pessoais e impacto ambiental. Desta forma, contribuímos para um turismo mais eficiente e responsável.
+                        </p>
+                        <p>
+                            O projeto foi desenvolvido com foco na experiência do usuário, oferecendo uma interface intuitiva e funcionalidades avançadas como visualização em mapas interativos e exportação de dados.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ODS Section -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-blue-600">Relação com os Objetivos de Desenvolvimento Sustentável (ODS)</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="ods-card p-6 rounded-lg">
+                            <div class="text-4xl mb-4 text-center">🏙️</div>
+                            <h4 class="text-lg font-semibold mb-3 text-center">ODS 11</h4>
+                            <h5 class="font-medium mb-2">Cidades e Comunidades Sustentáveis</h5>
+                            <p class="text-sm text-gray-600">Promovemos o turismo urbano sustentável em Luanda, valorizando o patrimônio cultural e natural da cidade.</p>
+                        </div>
+                        <div class="ods-card p-6 rounded-lg">
+                            <div class="text-4xl mb-4 text-center">🔄</div>
+                            <h4 class="text-lg font-semibold mb-3 text-center">ODS 12</h4>
+                            <h5 class="font-medium mb-2">Consumo e Produção Responsáveis</h5>
+                            <p class="text-sm text-gray-600">Incentivamos práticas de turismo responsável, otimizando recursos e reduzindo desperdícios.</p>
+                        </div>
+                        <div class="ods-card p-6 rounded-lg">
+                            <div class="text-4xl mb-4 text-center">💼</div>
+                            <h4 class="text-lg font-semibold mb-3 text-center">ODS 8</h4>
+                            <h5 class="font-medium mb-2">Trabalho Decente e Crescimento Econômico</h5>
+                            <p class="text-sm text-gray-600">Fomentamos o crescimento do setor turístico, gerando oportunidades econômicas locais.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Section -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-purple-600">Equipa Participante</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-2xl">👨‍💻</span>
+                            </div>
+                            <h4 class="font-semibold">António Pedro</h4>
+                            <p class="text-sm text-gray-600">Desenvolvedor Full-Stack</p>
+                            <p class="text-xs text-gray-500 mt-1">Algoritmos & Backend</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-2xl">👩‍🎨</span>
+                            </div>
+                            <h4 class="font-semibold">Luisani Caiuque</h4>
+                            <p class="text-sm text-gray-600">UX/UI Designer</p>
+                            <p class="text-xs text-gray-500 mt-1">Interface & Experiência</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-2xl">👨‍🔬</span>
+                            </div>
+                            <h4 class="font-semibold">Jandiro Tanque</h4>
+                            <p class="text-sm text-gray-600">Analista de Dados</p>
+                            <p class="text-xs text-gray-500 mt-1">Otimização & Analytics</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-2xl">👨‍🔬</span>
+                            </div>
+                            <h4 class="font-semibold">José Vale</h4>
+                            <p class="text-sm text-gray-600">Especialista em Turismo</p>
+                            <p class="text-xs text-gray-500 mt-1">Sustentabilidade & Conteúdo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Logo & Description -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                            <span class="text-green-800 font-bold text-lg">🌿</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">EcoRoteiros Luanda</h3>
+                            <p class="text-sm opacity-80">Turismo Inteligente & Sustentável</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Promovendo turismo sustentável e experiências autênticas em Luanda através de tecnologia inteligente e responsabilidade ambiental.
+                    </p>
+                </div>
+                
+                <!-- Partners -->
+                <div>
+                    <h4 class="font-semibold mb-4">Parceiros</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>🏆 Hackathon Angola 2025</p>
+                        <p>🎓 UNDP</p>
+                        <p>🌍 Ministério do Turismo</p>
+                        <p>💼 Câmara de Comércio de Luanda</p>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto da Equipa</h4>
+                    <div class="text-gray-400 space-y-2 text-sm">
+                        <p>📧 equipa@ecoroteiros.ao</p>
+                        <p>📱 +244 900 123 456</p>
+                        <p>📍 Luanda, Angola</p>
+                        <p>🌐 www.ecoroteiros.ao</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 mt-8 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        &copy; 2025 EcoRoteiros Luanda. Todos os direitos reservados. Desenvolvido com 💚 para um turismo sustentável.
+                    </p>
+                    <div class="flex space-x-4 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white">Política de Privacidade</a>
+                        <a href="#" class="text-gray-400 hover:text-white">Termos de Uso</a>
+                        <a href="#" class="text-gray-400 hover:text-white">Suporte</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced POIs Database for Luanda
+        const poisDatabase = [
+            {
+                id: 1,
+                name: "Museu Nacional da Escravatura",
+                category: ["cultura", "historia"],
+                cost: 2500,
+                duration: 2.5,
+                lat: -8.8137,
+                lng: 13.2302,
+                description: "Memorial histórico sobre o período da escravatura em Angola",
+                sustainability: 9,
+                familyFriendly: true,
+                travelTime: 0.5
+            },
+            {
+                id: 2,
+                name: "Parque Nacional da Kissama",
+                category: ["natureza", "sustentabilidade", "familia"],
+                cost: 18000,
+                duration: 6,
+                lat: -9.1667,
+                lng: 13.7833,
+                description: "Reserva natural com safáris e vida selvagem africana",
+                sustainability: 10,
+                familyFriendly: true,
+                travelTime: 2
+            },
+            {
+                id: 3,
+                name: "Miradouro da Lua",
+                category: ["natureza", "sustentabilidade"],
+                cost: 8000,
+                duration: 3,
+                lat: -9.0167,
+                lng: 13.4167,
+                description: "Formações rochosas únicas com paisagem lunar",
+                sustainability: 9,
+                familyFriendly: true,
+                travelTime: 1.5
+            },
+            {
+                id: 4,
+                name: "Ilha de Luanda",
+                category: ["natureza", "gastronomia", "familia"],
+                cost: 12000,
+                duration: 4,
+                lat: -8.7832,
+                lng: 13.2108,
+                description: "Península com praias e restaurantes tradicionais",
+                sustainability: 7,
+                familyFriendly: true,
+                travelTime: 0.5
+            },
+            {
+                id: 5,
+                name: "Fortaleza de São Miguel",
+                category: ["cultura", "historia"],
+                cost: 3000,
+                duration: 2,
+                lat: -8.8083,
+                lng: 13.2361,
+                description: "Fortaleza histórica com museu e vista panorâmica",
+                sustainability: 8,
+                familyFriendly: true,
+                travelTime: 0.3
+            },
+            {
+                id: 6,
+                name: "Mercado do Benfica",
+                category: ["cultura", "gastronomia"],
+                cost: 4000,
+                duration: 2.5,
+                lat: -8.8394,
+                lng: 13.2894,
+                description: "Mercado tradicional com produtos locais e artesanato",
+                sustainability: 6,
+                familyFriendly: true,
+                travelTime: 0.4
+            },
+            {
+                id: 7,
+                name: "Mussulo",
+                category: ["natureza", "familia", "sustentabilidade"],
+                cost: 15000,
+                duration: 5,
+                lat: -9.0833,
+                lng: 13.1167,
+                description: "Ilha paradisíaca com atividades aquáticas sustentáveis",
+                sustainability: 8,
+                familyFriendly: true,
+                travelTime: 1.5
+            },
+            {
+                id: 8,
+                name: "Restaurante Lookal Ocean Club",
+                category: ["gastronomia"],
+                cost: 14000,
+                duration: 2,
+                lat: -8.7901,
+                lng: 13.2076,
+                description: "Culinária angolana contemporânea com vista para o mar",
+                sustainability: 6,
+                familyFriendly: true,
+                travelTime: 0.5
+            },
+            {
+                id: 9,
+                name: "Centro Cultural Camões",
+                category: ["cultura"],
+                cost: 2000,
+                duration: 2,
+                lat: -8.8167,
+                lng: 13.2333,
+                description: "Espaço cultural com exposições e eventos artísticos",
+                sustainability: 8,
+                familyFriendly: true,
+                travelTime: 0.3
+            },
+            {
+                id: 10,
+                name: "Praia do Sangano",
+                category: ["natureza", "familia"],
+                cost: 7000,
+                duration: 4,
+                lat: -9.4333,
+                lng: 13.3167,
+                description: "Praia selvagem ideal para relaxamento e atividades familiares",
+                sustainability: 9,
+                familyFriendly: true,
+                travelTime: 2
+            },
+            {
+                id: 11,
+                name: "Museu de História Natural",
+                category: ["cultura", "familia", "sustentabilidade"],
+                cost: 2500,
+                duration: 2.5,
+                lat: -8.8200,
+                lng: 13.2400,
+                description: "Coleção de fauna e flora angolana com foco educativo",
+                sustainability: 9,
+                familyFriendly: true,
+                travelTime: 0.4
+            },
+            {
+                id: 12,
+                name: "Jardim Botânico de Luanda",
+                category: ["natureza", "sustentabilidade", "familia"],
+                cost: 3500,
+                duration: 3,
+                lat: -8.8300,
+                lng: 13.2500,
+                description: "Espaço verde com plantas nativas e programas de conservação",
+                sustainability: 10,
+                familyFriendly: true,
+                travelTime: 0.5
+            }
+        ];
+
+        let map;
+        let currentRoute = [];
+        const dayColors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899'];
+
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(pageId + 'Page').classList.remove('hidden');
+            
+            if (pageId === 'generator' && map) {
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Enhanced Route Generation Algorithm with Group Size
+        function generateIntelligentRoute(tripDays, dailyHours, totalBudget, preferences, groupSize) {
+            // Filter POIs by preferences
+            let availablePOIs = poisDatabase.filter(poi => {
+                if (preferences.length === 0) return true;
+                return poi.category.some(cat => preferences.includes(cat));
+            });
+
+            // Calculate daily budget and time
+            const dailyBudget = totalBudget / tripDays;
+            
+            // Score and sort POIs
+            availablePOIs = availablePOIs.map(poi => ({
+                ...poi,
+                individualCost: poi.cost,
+                groupCost: calculateGroupCost(poi.cost, groupSize, poi.category),
+                score: calculatePOIScore(poi, preferences, dailyBudget, dailyHours, groupSize)
+            })).sort((a, b) => b.score - a.score);
+
+            // Distribute POIs across days
+            const dailyItineraries = [];
+            const usedPOIs = new Set();
+
+            for (let day = 1; day <= tripDays; day++) {
+                const dayItinerary = {
+                    day: day,
+                    pois: [],
+                    totalCost: 0,
+                    totalTime: 0,
+                    totalTravelTime: 0
+                };
+
+                let remainingTime = dailyHours;
+                let remainingBudget = dailyBudget;
+
+                // Select POIs for this day
+                for (const poi of availablePOIs) {
+                    if (usedPOIs.has(poi.id)) continue;
+                    
+                    const totalTimeNeeded = poi.duration + poi.travelTime;
+                    
+                    if (totalTimeNeeded <= remainingTime && poi.groupCost <= remainingBudget) {
+                        const poiWithGroupData = {
+                            ...poi,
+                            totalGroupCost: poi.groupCost
+                        };
+                        
+                        dayItinerary.pois.push(poiWithGroupData);
+                        dayItinerary.totalCost += poi.groupCost;
+                        dayItinerary.totalTime += poi.duration;
+                        dayItinerary.totalTravelTime += poi.travelTime;
+                        
+                        remainingTime -= totalTimeNeeded;
+                        remainingBudget -= poi.groupCost;
+                        usedPOIs.add(poi.id);
+                        
+                        // Limit POIs per day to avoid overcrowding
+                        if (dayItinerary.pois.length >= 4) break;
+                    }
+                }
+
+                if (dayItinerary.pois.length > 0) {
+                    dailyItineraries.push(dayItinerary);
+                }
+            }
+
+            // Calculate totals
+            const totalCost = dailyItineraries.reduce((sum, day) => sum + day.totalCost, 0);
+            const totalTime = dailyItineraries.reduce((sum, day) => sum + day.totalTime, 0);
+            const totalPOIs = dailyItineraries.reduce((sum, day) => sum + day.pois.length, 0);
+
+            return {
+                dailyItineraries,
+                summary: {
+                    totalDays: dailyItineraries.length,
+                    totalPOIs,
+                    totalCost,
+                    totalTime,
+                    groupSize,
+                    costPerPerson: Math.round(totalCost / groupSize),
+                    savings: totalBudget - totalCost,
+                    efficiency: Math.round((totalPOIs / (tripDays * dailyHours)) * 100)
+                }
+            };
+        }
+
+        // Calculate group cost based on POI type and group size
+        function calculateGroupCost(individualCost, groupSize, categories) {
+            // Different pricing models for different types of POIs
+            if (categories.includes('gastronomia')) {
+                // Restaurants: cost per person
+                return individualCost * groupSize;
+            } else if (categories.includes('natureza') && individualCost > 10000) {
+                // Nature parks with entrance fees: often have group discounts
+                if (groupSize >= 5) {
+                    return individualCost * groupSize * 0.85; // 15% group discount
+                } else {
+                    return individualCost * groupSize;
+                }
+            } else if (categories.includes('cultura')) {
+                // Museums and cultural sites: usually per person with possible discounts
+                if (groupSize >= 6) {
+                    return individualCost * groupSize * 0.9; // 10% group discount
+                } else {
+                    return individualCost * groupSize;
+                }
+            } else {
+                // Default: cost per person
+                return individualCost * groupSize;
+            }
+        }
+
+        function calculatePOIScore(poi, preferences, dailyBudget, dailyHours, groupSize) {
+            let score = 0;
+            
+            // Preference matching (40% weight)
+            const matchingPreferences = poi.category.filter(cat => preferences.includes(cat)).length;
+            score += (matchingPreferences / Math.max(preferences.length, 1)) * 40;
+            
+            // Sustainability score (25% weight)
+            score += (poi.sustainability / 10) * 25;
+            
+            // Cost efficiency (20% weight) - now considers group cost
+            const groupCost = calculateGroupCost(poi.cost, groupSize, poi.category);
+            const costEfficiency = Math.max(0, (dailyBudget - groupCost) / dailyBudget);
+            score += costEfficiency * 20;
+            
+            // Time efficiency (10% weight)
+            const timeEfficiency = Math.max(0, (dailyHours - poi.duration - poi.travelTime) / dailyHours);
+            score += timeEfficiency * 10;
+            
+            // Group size bonus (5% weight) - some activities are better for groups
+            if (poi.familyFriendly && groupSize >= 3) {
+                score += 5; // Bonus for family-friendly activities with groups
+            }
+            
+            return score;
+        }
+
+        // Form Submission
+        document.getElementById('routeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const tripDays = parseInt(document.getElementById('tripDays').value);
+            const dailyHours = parseInt(document.getElementById('dailyHours').value);
+            const groupSize = parseInt(document.getElementById('groupSize').value);
+            const totalBudget = parseInt(document.getElementById('totalBudget').value);
+            const preferences = Array.from(document.querySelectorAll('.preference-checkbox:checked')).map(cb => cb.value);
+            
+            const route = generateIntelligentRoute(tripDays, dailyHours, totalBudget, preferences, groupSize);
+            currentRoute = route;
+            
+            displayRoute(route);
+            initializeMap(route.dailyItineraries);
+            
+            document.getElementById('routeResults').classList.remove('hidden');
+            document.getElementById('routeResults').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Display Route Results
+        function displayRoute(route) {
+            displayTotalSummary(route.summary);
+            displayDailyItinerary(route.dailyItineraries);
+        }
+
+        function displayTotalSummary(summary) {
+            const summaryContainer = document.getElementById('totalSummary');
+            summaryContainer.innerHTML = `
+                <div class="text-center p-4 bg-green-50 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">${summary.totalDays}</div>
+                    <div class="text-sm text-gray-600">Dias de Viagem</div>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">${summary.groupSize}</div>
+                    <div class="text-sm text-gray-600">Pessoas no Grupo</div>
+                </div>
+                <div class="text-center p-4 bg-purple-50 rounded-lg">
+                    <div class="text-2xl font-bold text-purple-600">${summary.totalCost.toLocaleString()}</div>
+                    <div class="text-sm text-gray-600">Custo Total do Grupo (Kz)</div>
+                </div>
+                <div class="text-center p-4 bg-orange-50 rounded-lg">
+                    <div class="text-2xl font-bold text-orange-600">${summary.costPerPerson.toLocaleString()}</div>
+                    <div class="text-sm text-gray-600">Custo por Pessoa (Kz)</div>
+                </div>
+                <div class="text-center p-4 bg-red-50 rounded-lg">
+                    <div class="text-2xl font-bold text-red-600">${summary.totalPOIs}</div>
+                    <div class="text-sm text-gray-600">Locais Visitados</div>
+                </div>
+                <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                    <div class="text-2xl font-bold text-yellow-600">${summary.savings.toLocaleString()}</div>
+                    <div class="text-sm text-gray-600">Economia Total (Kz)</div>
+                </div>
+            `;
+        }
+
+        function displayDailyItinerary(dailyItineraries) {
+            const container = document.getElementById('dailyItinerary');
+            container.innerHTML = '';
+            
+            dailyItineraries.forEach((dayData, dayIndex) => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card p-6 rounded-lg';
+                
+                const dayColor = dayColors[dayIndex % dayColors.length];
+                
+                dayCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-xl font-bold text-gray-800">Dia ${dayData.day}</h4>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">⏱️ ${dayData.totalTime}h</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full">💰 ${dayData.totalCost.toLocaleString()} Kz</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        ${dayData.pois.map((poi, poiIndex) => `
+                            <div class="poi-item p-4 rounded-lg" style="border-left-color: ${dayColor}">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h5 class="font-semibold text-gray-800">${poiIndex + 1}. ${poi.name}</h5>
+                                        <p class="text-sm text-gray-600 mt-1">${poi.description}</p>
+                                        <div class="flex items-center mt-2 space-x-2">
+                                            ${poi.category.map(cat => getCategoryIcon(cat)).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="text-right text-sm ml-4">
+                                        <div class="text-gray-600">⏱️ ${poi.duration}h</div>
+                                        <div class="text-blue-600">👤 ${poi.individualCost.toLocaleString()} Kz/pessoa</div>
+                                        <div class="text-purple-600 font-medium">👥 ${poi.totalGroupCost.toLocaleString()} Kz/grupo</div>
+                                        <div class="text-green-600">🌱 ${poi.sustainability}/10</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-green-200">
+                        <div class="grid grid-cols-4 gap-4 text-center text-sm">
+                            <div>
+                                <span class="font-medium text-gray-700">${dayData.pois.length} locais</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-blue-600">${dayData.totalTime}h atividades</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-purple-600">${dayData.totalCost.toLocaleString()} Kz grupo</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-orange-600">${Math.round(dayData.totalCost / currentRoute.summary.groupSize).toLocaleString()} Kz/pessoa</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(dayCard);
+            });
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                cultura: '<span class="category-icon bg-purple-100 text-purple-600">🏛️</span>',
+                natureza: '<span class="category-icon bg-green-100 text-green-600">🌿</span>',
+                gastronomia: '<span class="category-icon bg-orange-100 text-orange-600">🍽️</span>',
+                familia: '<span class="category-icon bg-blue-100 text-blue-600">👨‍👩‍👧‍👦</span>',
+                sustentabilidade: '<span class="category-icon bg-green-100 text-green-600">♻️</span>',
+                historia: '<span class="category-icon bg-yellow-100 text-yellow-600">📚</span>'
+            };
+            return icons[category] || '';
+        }
+
+        // Initialize Map with Day Grouping
+        function initializeMap(dailyItineraries) {
+            if (map) {
+                map.remove();
+            }
+            
+            map = L.map('map').setView([-8.8137, 13.2302], 10);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            const allMarkers = [];
+            
+            // Add markers for each day with different colors
+            dailyItineraries.forEach((dayData, dayIndex) => {
+                const dayColor = dayColors[dayIndex % dayColors.length];
+                
+                dayData.pois.forEach((poi, poiIndex) => {
+                    const marker = L.circleMarker([poi.lat, poi.lng], {
+                        color: 'white',
+                        fillColor: dayColor,
+                        fillOpacity: 0.8,
+                        radius: 8,
+                        weight: 2
+                    }).addTo(map);
+                    
+                    marker.bindPopup(`
+                        <div class="p-3 max-w-xs">
+                            <div class="flex items-center mb-2">
+                                <span class="w-4 h-4 rounded-full mr-2" style="background-color: ${dayColor}"></span>
+                                <strong>Dia ${dayData.day}</strong>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">${poiIndex + 1}. ${poi.name}</h3>
+                            <p class="text-sm text-gray-600 mt-1">${poi.description}</p>
+                            <div class="mt-2 space-y-1">
+                                <div class="flex justify-between text-xs">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">⏱️ ${poi.duration}h</span>
+                                    <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded">👤 ${poi.individualCost.toLocaleString()} Kz</span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium">👥 ${poi.totalGroupCost.toLocaleString()} Kz (grupo)</span>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    
+                    allMarkers.push(marker);
+                });
+            });
+            
+            // Fit map to show all markers
+            if (allMarkers.length > 0) {
+                const group = new L.featureGroup(allMarkers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        // Export Functions
+        function exportJSON() {
+            if (!currentRoute || currentRoute.dailyItineraries.length === 0) {
+                alert('Nenhum roteiro para exportar!');
+                return;
+            }
+            
+            const exportData = {
+                roteiro_inteligente: {
+                    resumo: {
+                        ...currentRoute.summary,
+                        numero_pessoas: currentRoute.summary.groupSize,
+                        custo_por_pessoa_kwanza: currentRoute.summary.costPerPerson
+                    },
+                    itinerario_diario: currentRoute.dailyItineraries.map(day => ({
+                        dia: day.day,
+                        locais: day.pois.map((poi, index) => ({
+                            ordem: index + 1,
+                            nome: poi.name,
+                            descricao: poi.description,
+                            categorias: poi.category,
+                            duracao_horas: poi.duration,
+                            custo_individual_kwanza: poi.individualCost,
+                            custo_grupo_kwanza: poi.totalGroupCost,
+                            tempo_deslocamento_horas: poi.travelTime,
+                            sustentabilidade: poi.sustainability,
+                            coordenadas: {
+                                latitude: poi.lat,
+                                longitude: poi.lng
+                            }
+                        })),
+                        resumo_diario: {
+                            total_locais: day.pois.length,
+                            tempo_total_horas: day.totalTime,
+                            custo_total_grupo_kwanza: day.totalCost,
+                            custo_medio_por_pessoa_kwanza: Math.round(day.totalCost / currentRoute.summary.groupSize),
+                            tempo_deslocamento_horas: day.totalTravelTime
+                        }
+                    }))
+                },
+                metadados: {
+                    gerado_em: new Date().toISOString(),
+                    versao: "2.0",
+                    algoritmo: "Roteirizador Inteligente com Grupos v2024",
+                    numero_pessoas: currentRoute.summary.groupSize
+                }
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'roteiro-inteligente-luanda.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportPDF() {
+            if (!currentRoute || currentRoute.dailyItineraries.length === 0) {
+                alert('Nenhum roteiro para exportar!');
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Header
+            doc.setFontSize(18);
+            doc.text('Roteiro Inteligente de Ecoturismo', 20, 20);
+            doc.setFontSize(14);
+            doc.text('Luanda, Angola', 20, 28);
+            
+            doc.setFontSize(10);
+            doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 20, 38);
+            
+            // Summary
+            doc.setFontSize(12);
+            doc.text('Resumo Geral:', 20, 50);
+            doc.setFontSize(9);
+            doc.text(`• Dias de viagem: ${currentRoute.summary.totalDays}`, 25, 58);
+            doc.text(`• Número de pessoas: ${currentRoute.summary.groupSize}`, 25, 64);
+            doc.text(`• Total de locais: ${currentRoute.summary.totalPOIs}`, 25, 70);
+            doc.text(`• Tempo total: ${currentRoute.summary.totalTime} horas`, 25, 76);
+            doc.text(`• Custo total do grupo: ${currentRoute.summary.totalCost.toLocaleString()} Kz`, 25, 82);
+            doc.text(`• Custo por pessoa: ${currentRoute.summary.costPerPerson.toLocaleString()} Kz`, 25, 88);
+            doc.text(`• Economia: ${currentRoute.summary.savings.toLocaleString()} Kz`, 25, 94);
+            
+            let yPosition = 105;
+            
+            // Daily Itineraries
+            currentRoute.dailyItineraries.forEach((dayData) => {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                
+                doc.setFontSize(12);
+                doc.text(`Dia ${dayData.day}`, 20, yPosition);
+                doc.setFontSize(9);
+                doc.text(`${dayData.pois.length} locais | ${dayData.totalTime}h | ${dayData.totalCost.toLocaleString()} Kz`, 25, yPosition + 6);
+                
+                yPosition += 15;
+                
+                dayData.pois.forEach((poi, index) => {
+                    if (yPosition > 270) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    
+                    doc.setFontSize(10);
+                    doc.text(`${index + 1}. ${poi.name}`, 30, yPosition);
+                    doc.setFontSize(8);
+                    doc.text(`${poi.description}`, 30, yPosition + 5);
+                    doc.text(`Duração: ${poi.duration}h | Individual: ${poi.individualCost.toLocaleString()} Kz/pessoa`, 30, yPosition + 10);
+                    doc.text(`Grupo: ${poi.totalGroupCost.toLocaleString()} Kz | Sustentabilidade: ${poi.sustainability}/10`, 30, yPosition + 15);
+                    
+                    yPosition += 23;
+                });
+                
+                yPosition += 5;
+            });
+            
+            doc.save('roteiro-inteligente-luanda.pdf');
+        }
+
+        // Initialize
+        showPage('home');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9797a4eb218577d7',t:'MTc1NjkyNzY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
