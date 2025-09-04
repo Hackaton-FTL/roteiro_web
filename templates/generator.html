@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Roteiro - EcoRoteiro IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #0891b2 100%);
+        }
+        .nature-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center">
+                        🌿
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">EcoRoteiros Luanda</h1>
+                        <p class="text-sm opacity-80">Turismo Inteligente & Sustentável</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="hover:text-green-300 transition-colors font-medium">Início</a>
+                    <a href="/generator" class="hover:text-green-300 transition-colors font-medium text-green-300">Gerar Roteiro</a>
+                    <a href="/about" class="hover:text-green-300 transition-colors font-medium">Sobre o Projeto</a>
+                </div>
+                <button class="md:hidden" onclick="toggleMobileMenu()" title="Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="/" class="block w-full text-left py-2 hover:text-green-300">Início</a>
+                <a href="/generator" class="block w-full text-left py-2 hover:text-green-300 text-green-300">Gerar Roteiro</a>
+                <a href="/about" class="block w-full text-left py-2 hover:text-green-300">Sobre o Projeto</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">🤖 Gerador de Roteiros Inteligente</h2>
+        <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+            Nossa IA criará um roteiro personalizado considerando suas preferências, orçamento e tempo disponível.
+        </p>
+        
+        <!-- Form -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-8">
+            <form action="/roteiro" method="post" id="roteiroForm" class="space-y-6">
+                <input type="hidden" name="usar_ia" value="true">
+                
+                <!-- Informações Pessoais -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">📋 Informações Pessoais</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">Nome *</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   id="nome" name="nome" placeholder="Seu nome" required>
+                        </div>
+                        <div>
+                            <label for="cidade" class="block text-sm font-medium text-gray-700 mb-2">Cidade/País de Destino *</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   id="cidade" name="cidade" placeholder="Luanda, Angola" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do Grupo -->
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">👥 Informações do Grupo</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="tamanho_grupo" class="block text-sm font-medium text-gray-700 mb-2">Tamanho do Grupo *</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                    id="tamanho_grupo" name="tamanho_grupo" required onchange="toggleAgeFields()">
+                                <option value="">Selecione</option>
+                                <option value="1">1 pessoa (solo)</option>
+                                <option value="2">2 pessoas</option>
+                                <option value="3">3 pessoas</option>
+                                <option value="4">4 pessoas</option>
+                                <option value="5">5 pessoas</option>
+                                <option value="6">6 pessoas</option>
+                                <option value="7">7 pessoas</option>
+                                <option value="8">8 pessoas</option>
+                                <option value="9">9 pessoas</option>
+                                <option value="10">10+ pessoas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="idades" class="block text-sm font-medium text-gray-700 mb-2">
+                                <span id="ageLabel">Sua idade</span>
+                            </label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   id="idades" name="idades" placeholder="25">
+                            <small id="ageHelp" class="text-gray-500 hidden">Ex: 25, 30, 8, 65 (idades de cada pessoa)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalhes da Viagem -->
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">🗓️ Detalhes da Viagem</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="dias" class="block text-sm font-medium text-gray-700 mb-2">Dias de Viagem *</label>
+                            <input type="number" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   id="dias" name="dias" min="1" max="30" placeholder="3" required>
+                        </div>
+                        <div>
+                            <label for="horas_diarias" class="block text-sm font-medium text-gray-700 mb-2">Horas Diárias de Atividades *</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                    id="horas_diarias" name="horas_diarias" required>
+                                <option value="">Selecione</option>
+                                <option value="4">4 horas (meio período)</option>
+                                <option value="6">6 horas (relaxado)</option>
+                                <option value="8" selected>8 horas (padrão)</option>
+                                <option value="10">10 horas (intenso)</option>
+                                <option value="12">12 horas (máximo)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="orcamento" class="block text-sm font-medium text-gray-700 mb-2">Orçamento Total (Kz) *</label>
+                            <input type="number" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   id="orcamento" name="orcamento" min="0" step="1000" placeholder="150000" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferências -->
+                <div class="bg-purple-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">🎯 Suas Preferências</h3>
+                    <div>
+                        <label for="preferencias_texto" class="block text-sm font-medium text-gray-700 mb-2">Atividades que Gosta</label>
+                        <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                  id="preferencias_texto" name="preferencias_texto" rows="4" 
+                                  placeholder="Exemplo: museus, trilhas na natureza, gastronomia local, vida noturna, praias, compras, monumentos históricos, aventura, relaxamento, fotografia, cultura local..."></textarea>
+                        <small class="text-gray-500">Descreva livremente suas preferências - nossa IA entenderá e personalizará seu roteiro!</small>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="nature-bg text-white py-4 px-8 rounded-lg font-semibold text-lg transition-all hover:shadow-lg transform hover:scale-105" id="generateBtn">
+                        <span id="btnText">🚀 Gerar Roteiro Inteligente</span>
+                        <span id="btnLoading" class="hidden">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Gerando roteiro...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="mb-4">
+                <svg class="animate-spin h-12 w-12 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+            <h4 class="text-xl font-bold text-gray-800 mb-2">🤖 Gerando seu roteiro personalizado...</h4>
+            <p class="text-gray-600">Aguarde enquanto nossa IA cria o roteiro perfeito para você!</p>
+            <div class="mt-4 text-sm text-gray-500">
+                ✨ Analisando suas preferências<br>
+                🎯 Otimizando tempo e orçamento<br>
+                🌍 Selecionando experiências sustentáveis
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleAgeFields() {
+            const groupSize = parseInt(document.getElementById('tamanho_grupo').value);
+            const ageLabel = document.getElementById('ageLabel');
+            const ageHelp = document.getElementById('ageHelp');
+            const ageInput = document.getElementById('idades');
+
+            if (groupSize > 1) {
+                ageLabel.textContent = `Idades do grupo (${groupSize} pessoas)`;
+                ageHelp.classList.remove('hidden');
+                ageInput.placeholder = '25, 30, 8, 65';
+            } else {
+                ageLabel.textContent = 'Sua idade';
+                ageHelp.classList.add('hidden');
+                ageInput.placeholder = '25';
+            }
+        }
+
+        // Controla o loading durante o envio do formulário
+        document.getElementById('roteiroForm').addEventListener('submit', function(e) {
+            const nome = document.getElementById('nome').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            const dias = document.getElementById('dias').value;
+            const horas = document.getElementById('horas_diarias').value;
+            const orcamento = document.getElementById('orcamento').value;
+            const grupo = document.getElementById('tamanho_grupo').value;
+            
+            if (!nome || !cidade || !dias || !horas || !orcamento || !grupo) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios (*).');
+                return false;
+            }
+
+            // Mostra o loading
+            document.getElementById('btnText').classList.add('hidden');
+            document.getElementById('btnLoading').classList.remove('hidden');
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

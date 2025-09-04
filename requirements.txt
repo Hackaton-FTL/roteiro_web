@@ -1,0 +1,4 @@
+Flask==2.3.3
+requests==2.31.0
+huggingface_hub==0.20.3
+python-dotenv==1.0.0
