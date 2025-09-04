@@ -28,28 +28,37 @@
         }
         .activity-item {
             font-size: 1.1rem;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+        .ai-content {
+            line-height: 1.6;
+            white-space: pre-line;
+            font-size: 1.05rem;
+        }
+        .description {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .activities-list {
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
     <div class="container itinerary-container">
-        <h1 class="text-center mb-4">Seu Roteiro de Viagem</h1>
-        <p class="text-center mb-5 text-muted">Aqui está o roteiro personalizado com base nas suas preferências.</p>
+        <h1 class="text-center mb-4">🤖 Seu Roteiro Inteligente</h1>
+        <p class="text-center mb-5 text-muted">
+            Aqui está o roteiro personalizado gerado por Inteligência Artificial com base nas suas preferências.
+        </p>
 
-		{% for atividade in roteiro %}
-		{% if atividade['atividade'] %}
+        <!-- Roteiro gerado por IA -->
         <div class="day-card">
-            <h3 class="mb-3">Dia {{ atividade['dia'] }}</h3>
-            <ul class="list-unstyled">
-				{% for item in atividade['atividade'] %}
-                <li class="activity-item">Atividade: {{ item['nome_atividade'] }} - Custo: {{ item['custo'] }} - Duração: {{ item['duracao'] }} horas - Descrição: {{ item['descricao'] }}</li>
-				{% endfor %}
-            </ul>
+            <div class="ai-content">
+                {{ roteiro_ia | replace('\n', '<br>') | safe }}
+            </div>
         </div>
-		{% endif %}
-		{% endfor %}
 
         <div class="d-grid gap-2 mt-5">
             <a href="/" class="btn btn-secondary rounded-lg">Voltar ao Formulário</a>

@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request
 import db, random
+from huggingface_hub import InferenceClient
 
 app = Flask(__name__)
+
+# Configuração do cliente da API da Hugging Face
+client = InferenceClient(api_key="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")
 
 @app.teardown_appcontext
 def teardown_db(exception):
@@ -16,36 +20,41 @@ def initdb():
 
 @app.route("/", methods=['GET'])
 def home():
-	query = db.get_db()
-	rows = query.execute("SELECT * FROM categorias").fetchall()
-	categorias = [dict(row) for row in rows ]
-	return render_template("index.html", categorias=categorias)
+	return render_template("index.html")
 
 
-def generateItineraries(orcamento, actividades, dias):
-	roteiro = []
-	orcamento_restante = orcamento
-	horas_por_dia = 8
-	atividades_filtradas = [
-        a for a in actividades
-    ]
-	random.shuffle(atividades_filtradas)
+def gerar_roteiro_com_ia(nome, idade, cidade, dias, orcamento, atividades):
+	"""Gera roteiro usando a API da Hugging Face"""
+	user_prompt = f"""
+Nome: {nome}
+Idade: {idade}
+Local: {cidade}
+Número de dias: {dias}
+Orçamento: {orcamento} kz
+Atividades preferidas: {atividades}
 
-	for dia in range(1, dias + 1):
-		horas_disponiveis = horas_por_dia
-		actividades_dia = []
-		for atividade in atividades_filtradas:
-			duracao = atividade['duracao_horas']
-			custo = atividade['custo']
+Crie um roteiro personalizado detalhado para {dias} dias de viagem com base nesses dados. 
+Organize por dias e inclua atividades, custos estimados e horários sugeridos.
+Mantenha-se dentro do orçamento especificado.
+Formate a resposta de forma clara e organizada.
+"""
 
-			if (custo <= orcamento_restante and duracao <= horas_disponiveis ):
-				orcamento_restante -= custo
-				horas_disponiveis -= duracao
-				actividades_dia.append(atividade)
-				atividades_filtradas.remove(atividade)
-		roteiro.append({"dia": dia, "atividade": actividades_dia})
+	# Histórico de conversa
+	conversation = [
+		{"role": "system", "content": "Você é um assistente de viagens útil e criativo especializado em criar roteiros detalhados e organizados."},
+		{"role": "user", "content": user_prompt},
+	]
 
-	return roteiro
+	try:
+		# Chama a API da Hugging Face
+		response = client.chat.completions.create(
+			model="meta-llama/Llama-3.3-70B-Instruct",
+			messages=conversation,
+			max_tokens=30000
+		)
+		return response.choices[0].message.content
+	except Exception as e:
+		return f"Erro ao gerar roteiro: {str(e)}"
 
 
 
@@ -53,22 +62,15 @@ def generateItineraries(orcamento, actividades, dias):
 def getItineraries():
 	dias = int(request.form.get("dias"))
 	orcamento = float(request.form.get("orcamento"))
-	preferencias = request.form.getlist("preferencias")
-	preferencias_ids = [int(pref) for pref in preferencias ]
+	nome = request.form.get("nome", "")
+	idade = request.form.get("idade", "")
+	cidade = request.form.get("cidade", "")
+	preferencias_texto = request.form.get("preferencias_texto", "")
 	
-	query = db.get_db()
-	if preferencias_ids:
-		placeholders = ",".join("?" * len(preferencias))
-		sql = f"SELECT * FROM atividades WHERE id_categoria IN ({placeholders})"
-		rows = query.execute(sql, preferencias_ids).fetchall()
-	else:
-		rows = query.execute("SELECT * FROM atividades").fetchall()
-
-	actividades = [dict(row) for row in rows ]
-	roteiro = generateItineraries(orcamento, actividades, dias)
-
-	return render_template("roteiro.html", roteiro=roteiro)
+	# Gerar roteiro com IA
+	roteiro_ia = gerar_roteiro_com_ia(nome, idade, cidade, dias, orcamento, preferencias_texto)
+	return render_template("roteiro.html", roteiro_ia=roteiro_ia)
 
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(debug=True, port=5001)
